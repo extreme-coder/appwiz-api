@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "essays",
+  "info": {
+    "singularName": "essay",
+    "pluralName": "essays",
+    "displayName": "Essay"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "prompt": {
+      "type": "string"
+    },
+    "essay": {
+      "type": "text"
+    }
+  }
+}

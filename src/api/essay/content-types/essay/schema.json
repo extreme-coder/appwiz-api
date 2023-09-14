@@ -4,7 +4,8 @@
   "info": {
     "singularName": "essay",
     "pluralName": "essays",
-    "displayName": "Essay"
+    "displayName": "Essay",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true

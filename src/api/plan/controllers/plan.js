@@ -26,22 +26,12 @@ module.exports = createCoreController('api::plan.plan', ({ strapi }) => ({
     // [customer_email] - lets you prefill the email input in the form
     // For full details see https://stripe.com/docs/api/checkout/sessions/create
     try {
-      const product = await stripe.products.create({
-        name: plan.name,
-      });
-
-      const price = await stripe.prices.create({
-        unit_amount: 500,
-        currency: 'usd',
-        product: product.id,
-      });
-
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
         line_items: [
           {
-            price: price.id,
+            price: plan.priceId,
             quantity: 1
           },
         ],

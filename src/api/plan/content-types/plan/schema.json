@@ -26,6 +26,9 @@
     },
     "oneTime": {
       "type": "boolean"
+    },
+    "priceId": {
+      "type": "string"
     }
   }
 }

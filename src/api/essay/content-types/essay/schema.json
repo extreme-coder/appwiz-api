@@ -22,6 +22,11 @@
     },
     "essay": {
       "type": "text"
+    },
+    "purchased": {
+      "type": "boolean",
+      "default": false,
+      "required": false
     }
   }
 }

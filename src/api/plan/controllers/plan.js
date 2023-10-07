@@ -42,7 +42,7 @@ module.exports = createCoreController('api::plan.plan', ({ strapi }) => ({
 
       //update user stripe session id and plan
       await fetch(
-        `http://localhost:1337/api/users/${user}`,
+        `${process.env.API_DOMAIN}/api/users/${user}`,
         {
           method: 'PUT',
           headers: {
@@ -67,7 +67,7 @@ module.exports = createCoreController('api::plan.plan', ({ strapi }) => ({
     console.log(sessionId)
     let user
     const users = await fetch(
-      `http://localhost:1337/api/users?filters[stripe_session_id][$eq]=${sessionId}&populate=*`,
+      `${process.env.API_DOMAIN}/api/users?filters[stripe_session_id][$eq]=${sessionId}&populate=*`,
       {
         method: 'GET',
         headers: {
@@ -89,7 +89,7 @@ module.exports = createCoreController('api::plan.plan', ({ strapi }) => ({
     })
 
     await fetch(
-      `http://localhost:1337/api/users/${user.id}`,
+      `${process.env.API_DOMAIN}/api/users/${user.id}`,
       {
         method: 'PUT',
         headers: {

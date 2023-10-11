@@ -13,10 +13,9 @@ module.exports = createCoreController('api::edit.edit', ({ strapi }) => ({
     const matchingEdits = await strapi.entityService.findMany("api::edit.edit", { filters: { essay: essay } });
     if (matchingEdits.length > 0) {
       const edit = matchingEdits[0];
-      return edit.rating;
+      return { rating: edit.rating };
     } else {
-      //return random rating
-      return ratings[Math.floor(Math.random() * ratings.length)];
+      return { rating: ratings[Math.floor(Math.random() * ratings.length)] };
     }
   }
 }));

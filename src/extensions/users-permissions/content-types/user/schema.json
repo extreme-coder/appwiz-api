@@ -66,7 +66,8 @@
       "configurable": false
     },
     "tokens": {
-      "type": "integer"
+      "type": "integer",
+      "required": true
     },
     "stripe_session_id": {
       "type": "string"

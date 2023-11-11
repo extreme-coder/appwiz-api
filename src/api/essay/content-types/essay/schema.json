@@ -27,6 +27,9 @@
       "type": "boolean",
       "default": false,
       "required": false
+    },
+    "question": {
+      "type": "string"
     }
   }
 }

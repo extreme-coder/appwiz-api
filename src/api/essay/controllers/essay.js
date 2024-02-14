@@ -13,7 +13,7 @@ module.exports = createCoreController('api::essay.essay', ({ strapi }) => ({
       const openai = new OpenAI();
 
       console.log(ctx.request.body)
-      const { mainIdea, details, testMode } = ctx.request.body;
+      const { mainIdea, details, wordLimit, testMode } = ctx.request.body;
       if (testMode) {
         return { essay: "This is a test essay." };
       }
@@ -52,7 +52,7 @@ module.exports = createCoreController('api::essay.essay', ({ strapi }) => ({
       }
 
       const length = cleanResponseText.split(" ").length;
-      const difference = length - 650;
+      const difference = length - wordLimit;
 
       let shortResponse;
 

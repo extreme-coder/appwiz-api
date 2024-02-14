@@ -12,7 +12,11 @@ module.exports = createCoreController('api::essay.essay', ({ strapi }) => ({
       const { OpenAI } = require('openai');
       const openai = new OpenAI();
 
-      const { mainIdea, details } = ctx.request.body;
+      console.log(ctx.request.body)
+      const { mainIdea, details, testMode } = ctx.request.body;
+      if (testMode) {
+        return { essay: "This is a test essay." };
+      }
 
       // Validate request body
       if (!mainIdea || !details) {
@@ -52,19 +56,36 @@ module.exports = createCoreController('api::essay.essay', ({ strapi }) => ({
 
       let shortResponse;
 
-      if (difference !== 0) {
+      if (difference > 0) {
+        console.log("too long")
+        const sentences = await openai.chat.completions.create({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "user", content: `Rank EVERY SINGLE ONE of the sentences in this essay from most important/least cuttable to least important/most cuttable. Your response should contain a comma-separated sorted list of sentences, and nothing else.\n` + cleanResponseText }
+          ]
+        });
+        const sentenceText = sentences.choices[0]?.message?.content?.trim();
+        const sentencesToCut = sentenceText.split(" ").reverse().slice(0, difference).reverse().join(" ");
         shortResponse = await openai.chat.completions.create({
           model: "gpt-3.5-turbo",
           messages: [
-            { role: "system", content: 'You are a writer and proofreader, that specializes in shortening essays while retaining their meaning and impact.' },
-            { role: "user", content: cleanResponseText + `\nPlease find exactly ${Math.abs(difference)} words that can be removed without negatively impacting the essay, and remove them. Return the final essay only.` }
+            { role: "user", content: cleanResponseText + `\nCut the following sentences from the above essay:\n` + sentencesToCut + '\nYour response should contain only the final essay with the sentences removed, and nothing else.' }
           ]
         });
       } else {
         shortResponse = cleanResponse;
       }
 
-      const responseText = shortResponse.choices[0]?.message?.content?.trim();
+      const shortResponseText = shortResponse.choices[0]?.message?.content?.trim();
+      const cleanShortResponse = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: 'You are a writer and proofreader.' },
+          { role: "user", content: shortResponseText + "\nThis essay is messy, please clean it up and add line breaks where it makes sense for a college admissions essay. Return the final essay only." }
+        ]
+      });
+
+      const responseText = cleanShortResponse.choices[0]?.message?.content?.trim();
 
       if (!responseText) {
         throw new Error('Failed to adjust the essay length');
